@@ -492,7 +492,11 @@ public final class LoadingCacheTest {
     assertThat(cache.getIfPresent(key), is(updated));
     assertThat(removed, containsInAnyOrder(original, refreshed));
     assertThat(cache, hasRemovalNotifications(context, 2, RemovalCause.REPLACED));
-    assertThat(context, both(hasLoadSuccessCount(1)).and(hasLoadFailureCount(0)));
+
+    if (cache.policy().isRecordingStats()) {
+      await().until(() -> cache.stats().loadCount(), is(1L));
+      await().until(() -> cache.stats().loadFailureCount(), is(0L));
+    }
   }
 
   @Test(dataProvider = "caches")

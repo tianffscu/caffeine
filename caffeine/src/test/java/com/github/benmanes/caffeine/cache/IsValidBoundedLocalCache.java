@@ -15,6 +15,7 @@
  */
 package com.github.benmanes.caffeine.cache;
 
+import static com.github.benmanes.caffeine.testing.Awaits.await;
 import static com.github.benmanes.caffeine.testing.IsEmptyMap.emptyMap;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -37,7 +38,6 @@ import com.github.benmanes.caffeine.cache.Async.AsyncWeigher;
 import com.github.benmanes.caffeine.cache.References.WeakKeyReference;
 import com.github.benmanes.caffeine.cache.TimerWheel.Sentinel;
 import com.github.benmanes.caffeine.cache.testing.CacheSpec.CacheWeigher;
-import com.github.benmanes.caffeine.testing.Awaits;
 import com.github.benmanes.caffeine.testing.DescriptionBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -85,7 +85,7 @@ public final class IsValidBoundedLocalCache<K, V>
   }
 
   private void checkReadBuffer(BoundedLocalCache<K, V> cache) {
-    Awaits.await().pollInSameThread().until(() -> {
+    await().pollInSameThread().until(() -> {
       cache.cleanUp();
       Buffer<?> buffer = cache.readBuffer;
       return (buffer.size() == 0) && buffer.reads() == buffer.writes();
